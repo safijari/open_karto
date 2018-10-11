@@ -16,6 +16,7 @@
  */
 
 #include "open_karto/Mapper.h"
+#include "open_karto/SpaSolver.h"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/numpy.h>
@@ -32,6 +33,7 @@ class MapperWrapper {
   karto::Dataset *dataset;
   karto::LaserRangeFinder *rangeFinder;
   karto::Name name;
+  SpaSolver* solver_;
 
 public:
   MapperWrapper(std::string sensorName, double angularResolution, double angleMin, double angleMax) {
@@ -43,8 +45,41 @@ public:
     this->rangeFinder->SetAngularResolution(angularResolution);
     this->rangeFinder->SetMinimumAngle(angleMin);
     this->rangeFinder->SetMaximumAngle(angleMax);
+    this->rangeFinder->SetRangeThreshold(6.0); // TODO
 
     this->dataset->Add(this->rangeFinder);
+
+
+    // mapper params
+    this->mapper->setParamUseScanMatching(true);
+    this->mapper->setParamUseScanBarycenter(true);
+    this->mapper->setParamScanBufferSize(10);
+    this->mapper->setParamScanBufferMaximumScanDistance(10);
+    this->mapper->setParamLinkMatchMinimumResponseFine(0.1);
+    this->mapper->setParamLinkScanMaximumDistance(1.5);
+    this->mapper->setParamLoopSearchMaximumDistance(3.0);
+    this->mapper->setParamDoLoopClosing(true);
+    this->mapper->setParamLoopMatchMinimumChainSize(10);
+    this->mapper->setParamLoopMatchMaximumVarianceCoarse(3.0);
+    this->mapper->setParamLoopMatchMinimumResponseCoarse(0.35);
+    this->mapper->setParamLoopMatchMinimumResponseFine(0.45);
+    this->mapper->setParamCorrelationSearchSpaceDimension(8.0);
+    this->mapper->setParamCorrelationSearchSpaceResolution(0.05);
+    this->mapper->setParamCorrelationSearchSpaceSmearDeviation(0.03);
+    this->mapper->setParamLoopSearchSpaceDimension(8.0);
+    this->mapper->setParamLoopSearchSpaceResolution(0.05);
+    this->mapper->setParamLoopSearchSpaceSmearDeviation(0.03);
+    this->mapper->setParamDistanceVariancePenalty(0.5);
+    this->mapper->setParamAngleVariancePenalty(1.0);
+    this->mapper->setParamFineSearchAngleOffset(0.00349);
+    this->mapper->setParamCoarseSearchAngleOffset(0.349);
+    this->mapper->setParamCoarseAngleResolution(0.0349);
+    this->mapper->setParamMinimumAnglePenalty(0.9);
+    this->mapper->setParamMinimumDistancePenalty(0.5);
+    this->mapper->setParamUseResponseExpansion(true);
+
+    solver_ = new SpaSolver();
+    this->mapper->SetScanSolver(solver_);
   }
 
   karto::LaserRangeFinder * getRangeFinder() {
@@ -64,7 +99,7 @@ public:
     scan->SetOdometricPose(karto::Pose2(x, y, heading));
     scan->SetCorrectedPose(karto::Pose2(x, y, heading));
 
-    auto success = this-mapper->Process(scan);
+    auto success = this->mapper->Process(scan);
     if (success) {
       this->dataset->Add(scan);
     }
@@ -87,6 +122,7 @@ public:
   }
 
   ~MapperWrapper() {
+    delete this->solver_;
     delete this->mapper;
     delete this->dataset;
   }
