@@ -22,7 +22,7 @@ class get_pybind_include(object):
 
 ext_modules = [
     Extension(
-        'openkarto',
+        'open_karto',
         ['src/PythonInterface.cpp', 'src/Mapper.cpp', 'src/Karto.cpp'],
         include_dirs=[
             'include',
