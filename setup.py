@@ -26,6 +26,7 @@ ext_modules = [
         ['src/PythonInterface.cpp', 'src/Mapper.cpp', 'src/Karto.cpp'],
         include_dirs=[
             'include',
+            'pybind11/include',
             '/usr/include/eigen3/',
             get_pybind_include(),
             get_pybind_include(user=True)
@@ -91,6 +92,8 @@ class BuildExt(build_ext):
         build_ext.build_extensions(self)
 
 
+__version__ = 'dev'
+
 commit_var = 'COMMIT'
 tag_name_var = 'TAG'
 
@@ -106,6 +109,7 @@ setup(
     author='Jariullah Safi',
     author_email='safijari@isu.edu',
     ext_modules=ext_modules,
+    setup_requires=['pybind11>=2.2'],
     install_requires=['pybind11>=2.2'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
