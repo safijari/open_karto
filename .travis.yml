@@ -20,7 +20,8 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: fKuNbXVIiqrZq5lZYBctSaDjiRyey44RCBHIjE6EOt0L7dwxahHHvZTIdK+Vp/yXZE19gd9EsC4A9wHOp1K1ux3Kkie2HRK5jvdF8SrIbqsQIxqJo2CiaMLwUWS8XAE+l+I0RwJPStLsociBRuprHr4bFEyNCA76wnp7RWIx3H5DrS53zefOrNU8V+lEbIqbNT7V/cbs2zmk8mX1VEfDHajiNCxzNnDmK7mVmsjSnLVUwvHKHiEiC01n9KVsdB9GqHQdsRqA+ay2uIuBJVm+e/FWb3hm6VJYYVHuWX60DaqbA21QVPNipU7iz6/jOZiQAgARV3vxhS56eiAJX+MVPNVIzNdy5qgwlxi9CILS0VaZhetyy6MxK8qGrnXOnsuGs/+5WXVQcCQqv8AJRNr5mZlR4XhnAdq4aws728A2lVYcfzGGut588GWM5efv/4uYz0fba7FSUBLBtr0qq1DDkGwS1gLBINz20QuYQ3RKRCQfG0DiiKU42nv1IqA0hIYUhEZZvs/f6ngJzkILmlDCBVLlpl4G/dxdf7+nVVwCtZebynV/NNe/sGjgoxaX+UE0kXp1oUbff2lwbAqujN9nVaMJVJj3zDar31HyACZzGqJo0y08sf239k2nJLNscYIngCCBTEP829rsiXh+c5PI5I3umRH/e4i5RMzyZ/Qkkng=
-  file: wheelhouse/*
+  file: "wheelhouse/*"
+  file_glob: true
   on:
     repo: safijari/open_karto
     branch: python-devel
