@@ -25,3 +25,4 @@ deploy:
   on:
     repo: safijari/open_karto
     branch: python-devel
+    tags: true
