@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from openkarto import (Mapper, Dataset, Name, LaserRangeFinder,
+from open_karto import (Mapper, Dataset, Name, LaserRangeFinder,
                        LocalizedRangeScan,
                        process_localized_range_scan, Pose2,
                        add_range_finder_to_dataset,
@@ -11,7 +11,7 @@ from openkarto import (Mapper, Dataset, Name, LaserRangeFinder,
 def _main():
     mapper = Mapper()
     dataset = Dataset()
-    name = Name('laser0')
+    name = Name('laser1')
 
     mapper.reset()
     mapper.min_travel_distance
@@ -45,7 +45,7 @@ def _main():
     add_localized_range_scan_to_dataset(scans[-1], dataset)
 
     grid = create_occupancy_grid(mapper, 0.1)
-    print grid.width, grid.height, grid.offset
+    print(grid.width, grid.height, grid.offset)
 
     # TODO this should really happen on the C++ side
     map_img = np.zeros((grid.height, grid.width), np.uint8)
@@ -61,11 +61,11 @@ def _main():
 
     cv2.imwrite('/tmp/map.png', map_img)
 
-    print scans[-1].get_corrected_pose()
+    print(scans[-1].get_corrected_pose())
 
 def main():
     mw = MapperWrapper('laser0', 0.5, -1.0, 1.0)
-    mw2 = MapperWrapper('laser0', 0.5, -1.0, 1.0)
+    mw2 = MapperWrapper('laser3', 0.5, -1.0, 1.0)
     mw.reset()
     mw.range_finder.set_offset_pose(Pose2(1.0, 0.0, 0.0))
     mw.range_finder.set_angular_resolution(np.deg2rad(0.5))
@@ -75,7 +75,7 @@ def main():
     mw.process_scan([3.0]*230, 1.0, 0, 1.57)
 
     grid = mw.create_occupancy_grid(0.1)
-    print grid.width, grid.height, grid.offset
+    print(grid.width, grid.height, grid.offset)
 
     # TODO this should really happen on the C++ side
     map_img = np.zeros((grid.height, grid.width), np.uint8)
@@ -97,5 +97,5 @@ def main():
 
 if __name__ == '__main__':
     s = main()
-    print "out"
-    print s.get_corrected_pose()
+    print("out")
+    print(s.get_corrected_pose())
